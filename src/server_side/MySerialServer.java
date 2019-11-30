@@ -7,14 +7,10 @@ public class MySerialServer implements Server {
 
 	private ServerSocket serverSocket;
     private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
     
     public MySerialServer() {
     	this.serverSocket = null;
     	this.clientSocket = null;
-    	this.out = null;
-    	this.in = null;
     }
 	
 	@Override
@@ -30,46 +26,50 @@ public class MySerialServer implements Server {
         }
         
         // Accepting client connection
-        try {
-            clientSocket = serverSocket.accept();
-            System.out.println("Accepted client");
-        } catch (IOException e) {
-            System.err.println("Accept failed");
-            System.exit(1);
+        while (true) {
+	        try {
+	            clientSocket = serverSocket.accept();
+	            
+	            c.handleClient(clientSocket.getInputStream(), clientSocket.getOutputStream());
+	            
+	            // TODO Create Thread for every connection
+	            
+	        } catch (IOException e) {
+	            System.err.println("Accept failed");
+	            System.exit(1);
+	        }
         }
         
-        // Reading client message
-        try {
-        	out = new PrintWriter(clientSocket.getOutputStream());
-        	in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		} catch (IOException e) {
-			System.err.println("Read failed");
-            System.exit(1);
-		}
-        
-        // Send message to client
-        String input;
-        while (true) {
-			try {
-				input = in.readLine();
-				if (input == "exit") {
-					break;
-				}
-				out.println(input);
-			} catch (IOException e) {
-				System.out.println("Read failed");
-		        System.exit(-1);
-			}
-		}
-        
-        stop();
+//        // Reading client message
+//        try {
+//        	out = new PrintWriter(clientSocket.getOutputStream());
+//        	in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//		} catch (IOException e) {
+//			System.err.println("Read failed");
+//            System.exit(1);
+//		}
+//        
+//        // Send message to client
+//        String input;
+//        while (true) {
+//			try {
+//				input = in.readLine();
+//				if (input == "exit") {
+//					break;
+//				}
+//				out.println(input);
+//			} catch (IOException e) {
+//				System.out.println("Read failed");
+//		        System.exit(-1);
+//			}
+//		}
+//        
+//        stop();
 	}
 
 	@Override
 	public void stop() {
         try {
-        	out.close();
-        	in.close();
         	clientSocket.close();
 			serverSocket.close();
 		} catch (IOException e) {
