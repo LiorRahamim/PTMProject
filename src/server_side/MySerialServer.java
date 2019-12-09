@@ -7,75 +7,56 @@ public class MySerialServer implements Server {
 
 	private ServerSocket serverSocket;
     private Socket clientSocket;
+    private int port;
+    private ClientHandler ch;
+    private volatile boolean stop;
     
     public MySerialServer() {
     	this.serverSocket = null;
     	this.clientSocket = null;
     }
 	
-	@Override
-	public void start(int port, ClientHandler c) {
-		
-		// Starting server on given port
-        try {
-            serverSocket = new ServerSocket(port);
-            System.out.println("Listening on port: " + port);
-        } catch (IOException e) {
-            System.err.println("Could not listen on port: " + port);
-            System.exit(1);
-        }
-        
-        // Accepting client connection
-        while (true) {
-	        try {
-	            clientSocket = serverSocket.accept();
-	            
-	            c.handleClient(clientSocket.getInputStream(), clientSocket.getOutputStream());
-	            
-	            // TODO Create Thread for every connection
-	            
-	        } catch (IOException e) {
-	            System.err.println("Accept failed");
-	            System.exit(1);
-	        }
-        }
-        
-//        // Reading client message
-//        try {
-//        	out = new PrintWriter(clientSocket.getOutputStream());
-//        	in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//		} catch (IOException e) {
-//			System.err.println("Read failed");
-//            System.exit(1);
-//		}
-//        
-//        // Send message to client
-//        String input;
-//        while (true) {
-//			try {
-//				input = in.readLine();
-//				if (input == "exit") {
-//					break;
-//				}
-//				out.println(input);
-//			} catch (IOException e) {
-//				System.out.println("Read failed");
-//		        System.exit(-1);
-//			}
-//		}
-//        
-//        stop();
-	}
-
-	@Override
-	public void stop() {
-        try {
-        	clientSocket.close();
-			serverSocket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+    @Override
+    public void start(int port, ClientHandler ch) {
+    	new Thread(()->{
+			try {
+				runServer(port, ch);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}).start();
+    }
+    
+    @Override
+    public void stop() {
+    	stop = true;
+    }
+    
+    private void runServer(int port, ClientHandler ch) throws Exception {
+    	ServerSocket server = new ServerSocket(port);
+    	server.setSoTimeout(1000);
+    	while(!stop) {
+    		try {
+    			Socket aClient = server.accept(); // blocking call
+    			try {
+    				ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+    				
+    				// TODO: input output to socket
+    				
+    				aClient.getInputStream().close();
+    				aClient.getOutputStream().close();
+    				aClient.close();
+    			}
+    			catch(IOException e) {
+    				// TODO: handle exception
+    			}
+    		}
+    		catch (SocketTimeoutException e) {
+				// TODO: handle exception
+			}
+    	}
+    	server.close();
+    }
 }
+
