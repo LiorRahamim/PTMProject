@@ -17,6 +17,10 @@ public class MySerialServer implements Server {
     	stop = false;
     }
 	
+    public MySerialServer(int port) {
+    	this.port = port;
+    }
+    
     @Override
     public void start(int port, ClientHandler ch) {
     	new Thread(()->{
@@ -36,7 +40,7 @@ public class MySerialServer implements Server {
     
     private void runServer(int port, ClientHandler ch) throws Exception {
     	ServerSocket server = new ServerSocket(port);
-    	server.setSoTimeout(1000);
+    	server.setSoTimeout(3000);
     	while(!stop) {
     		try {
     			Socket aClient = server.accept(); // blocking call
@@ -50,6 +54,7 @@ public class MySerialServer implements Server {
     				aClient.close();
     			}
     			catch(IOException e) {
+    				System.out.println("PROBLEM- MySerialServer line 57");
     				// TODO: handle exception
     			}
     		}

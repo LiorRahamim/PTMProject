@@ -23,6 +23,7 @@ public class MyTestClientHandler implements ClientHandler {
 		try {
 			line = in.readLine();
 			out.println(new StringBuilder(line).reverse().toString());
+			out.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

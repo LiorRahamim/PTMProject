@@ -12,7 +12,10 @@ public class RunProj {
 		s = new MySerialServer();
 		s.start(port, new MyTestClientHandler());
 		System.out.println("asg");
-		// s.stop();
+		s.stop();
+		
+		
+		
 	}
 
 }
