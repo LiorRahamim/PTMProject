@@ -14,6 +14,7 @@ public class MySerialServer implements Server {
     public MySerialServer() {
     	this.serverSocket = null;
     	this.clientSocket = null;
+    	stop = false;
     }
 	
     @Override

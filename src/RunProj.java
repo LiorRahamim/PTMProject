@@ -9,8 +9,10 @@ public class RunProj {
 		Server s;
 		int port = 8000;
 		
-		//s = new MySerialServer();
-		//s.start(port, new MyTestClientHandler());
+		s = new MySerialServer();
+		s.start(port, new MyTestClientHandler());
+		System.out.println("asg");
+		// s.stop();
 	}
 
 }
