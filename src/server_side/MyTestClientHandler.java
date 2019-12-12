@@ -19,11 +19,15 @@ public class MyTestClientHandler implements ClientHandler {
 		PrintWriter out = new PrintWriter(outputStream);
 				
 		String line;
-		// TODO Handle the clients input
+		
 		try {
 			line = in.readLine();
-			out.println(new StringBuilder(line).reverse().toString());
-			out.flush();
+			while (!line.equals("end")) {
+				out.println(new StringBuilder(line).reverse().toString());
+				out.flush();
+				
+				line = in.readLine();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

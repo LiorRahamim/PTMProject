@@ -7,8 +7,6 @@ public class MySerialServer implements Server {
 
 	private ServerSocket serverSocket;
     private Socket clientSocket;
-    private int port;
-    private ClientHandler ch;
     private volatile boolean stop;
     
     public MySerialServer() {
@@ -17,10 +15,6 @@ public class MySerialServer implements Server {
     	stop = false;
     }
 	
-    public MySerialServer(int port) {
-    	this.port = port;
-    }
-    
     @Override
     public void start(int port, ClientHandler ch) {
     	new Thread(()->{
@@ -39,22 +33,19 @@ public class MySerialServer implements Server {
     }
     
     private void runServer(int port, ClientHandler ch) throws Exception {
-    	ServerSocket server = new ServerSocket(port);
-    	server.setSoTimeout(3000);
+    	serverSocket = new ServerSocket(port);
+    	serverSocket.setSoTimeout(3000);
     	while(!stop) {
     		try {
-    			Socket aClient = server.accept(); // blocking call
+    			clientSocket = serverSocket.accept();
     			try {
-    				ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+    				ch.handleClient(clientSocket.getInputStream(), clientSocket.getOutputStream());
     				
-    				// TODO: input output to socket
-    				
-    				aClient.getInputStream().close();
-    				aClient.getOutputStream().close();
-    				aClient.close();
+    				clientSocket.close();
     			}
     			catch(IOException e) {
     				System.out.println("PROBLEM- MySerialServer line 57");
+    				e.printStackTrace();
     				// TODO: handle exception
     			}
     		}
@@ -62,7 +53,7 @@ public class MySerialServer implements Server {
 				// TODO: handle exception
 			}
     	}
-    	server.close();
+    	serverSocket.close();
     }
 }
 
