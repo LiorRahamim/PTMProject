@@ -1,6 +1,6 @@
 package server_side;
 
-public class FileCacheManager implements CacheManager {
+public class FileCacheManager <Problem, Solution> implements CacheManager <Problem, Solution> {
 
 	@Override
 	public boolean isSolved(Problem p) {

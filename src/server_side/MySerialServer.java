@@ -44,7 +44,6 @@ public class MySerialServer implements Server {
     				clientSocket.close();
     			}
     			catch(IOException e) {
-    				System.out.println("PROBLEM- MySerialServer line 57");
     				e.printStackTrace();
     				// TODO: handle exception
     			}
