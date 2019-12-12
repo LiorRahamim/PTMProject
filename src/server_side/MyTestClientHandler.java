@@ -17,13 +17,14 @@ public class MyTestClientHandler implements ClientHandler {
 		
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 		PrintWriter out = new PrintWriter(outputStream);
+		Solver<String, String> solver = new StringReverserSolver();
 				
 		String line;
 		
 		try {
 			line = in.readLine();
 			while (!line.equals("end")) {
-				out.println(new StringBuilder(line).reverse().toString());
+				out.println(solver.solve(line));
 				out.flush();
 				
 				line = in.readLine();
