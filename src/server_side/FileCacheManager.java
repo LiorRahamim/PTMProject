@@ -17,6 +17,7 @@ public class FileCacheManager<Problem extends Comparable<Problem>, Solution>
 		FileInputStream in;
 
 		try {
+			file.createNewFile();
 			in = new FileInputStream(file);
 			ObjectInputStream o = new ObjectInputStream(in);
 
@@ -54,6 +55,7 @@ public class FileCacheManager<Problem extends Comparable<Problem>, Solution>
 		FileInputStream in;
 
 		try {
+			file.createNewFile();
 			in = new FileInputStream(file);
 			ObjectInputStream o = new ObjectInputStream(in);
 
@@ -91,6 +93,7 @@ public class FileCacheManager<Problem extends Comparable<Problem>, Solution>
 		FileOutputStream out;
 
 		try {
+			file.createNewFile();
 			out = new FileOutputStream(file);
 			ObjectOutputStream o = new ObjectOutputStream(out);
 			o.writeObject(p);

@@ -26,7 +26,8 @@ public class MyTestClientHandler implements ClientHandler {
 		try {
 			line = in.readLine();
 			while (!line.equals("end")) {
-				if(cacheManager.isSolved(line)) {
+				/*
+				 * if(cacheManager.isSolved(line)) {
 					solution = cacheManager.getSolution(line);
 				}
 				else {
@@ -34,6 +35,8 @@ public class MyTestClientHandler implements ClientHandler {
 					cacheManager.SaveSolution(line, solution);
 				}
 				out.println(solution);
+				 */
+				out.println(solver.solve(line));
 				out.flush();
 				
 				line = in.readLine();
