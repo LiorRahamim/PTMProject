@@ -18,13 +18,22 @@ public class MyTestClientHandler implements ClientHandler {
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 		PrintWriter out = new PrintWriter(outputStream);
 		Solver<String, String> solver = new StringReverserSolver();
+		CacheManager<String, String> cacheManager = new FileCacheManager<>();
 				
 		String line;
+		String solution;
 		
 		try {
 			line = in.readLine();
 			while (!line.equals("end")) {
-				out.println(solver.solve(line));
+				if(cacheManager.isSolved(line)) {
+					solution = cacheManager.getSolution(line);
+				}
+				else {
+					solution = solver.solve(line);
+					cacheManager.SaveSolution(line, solution);
+				}
+				out.println(solution);
 				out.flush();
 				
 				line = in.readLine();
