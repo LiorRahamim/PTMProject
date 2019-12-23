@@ -17,19 +17,21 @@ public class FileCacheManager<Problem extends Comparable<Problem>, Solution>
 		FileInputStream in;
 
 		try {
-			file.createNewFile();
+			if (file.createNewFile()) {
+				return false;
+			}			
 			in = new FileInputStream(file);
 			ObjectInputStream o = new ObjectInputStream(in);
-
+			
 			Problem problem = (Problem) o.readObject();
 			Solution solution = (Solution) o.readObject();
 			while (problem != null) {
 				if (problem.equals(p)) {
 					o.close();
 					return true;
-				}
-				problem = (Problem) o.readObject();
-				solution = (Solution) o.readObject();
+				} else if ((problem = (Problem) o.readObject()) != null) {
+					solution = (Solution) o.readObject();					
+				}				
 			}
 			
 			o.close();
@@ -94,10 +96,11 @@ public class FileCacheManager<Problem extends Comparable<Problem>, Solution>
 
 		try {
 			file.createNewFile();
-			out = new FileOutputStream(file);
+			out = new FileOutputStream(file, true);
 			ObjectOutputStream o = new ObjectOutputStream(out);
 			o.writeObject(p);
 			o.writeObject(s);
+			o.writeObject(null);
 			o.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -26,17 +26,16 @@ public class MyTestClientHandler implements ClientHandler {
 		try {
 			line = in.readLine();
 			while (!line.equals("end")) {
-				/*
-				 * if(cacheManager.isSolved(line)) {
+
+				if(cacheManager.isSolved(line)) {
 					solution = cacheManager.getSolution(line);
 				}
 				else {
 					solution = solver.solve(line);
 					cacheManager.SaveSolution(line, solution);
 				}
-				out.println(solution);
-				 */
-				out.println(solver.solve(line));
+				
+				out.println(solution);				
 				out.flush();
 				
 				line = in.readLine();
