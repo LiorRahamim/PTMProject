@@ -18,7 +18,8 @@ public class MyTestClientHandler implements ClientHandler {
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 		PrintWriter out = new PrintWriter(outputStream);
 		Solver<String, String> solver = new StringReverserSolver();
-		CacheManager<String, String> cacheManager = new FileCacheManager<>();
+//		CacheManager<String, String> cacheManager = new FileCacheManager<>();
+		CacheManager<String, String> cacheManager = new HashCacheManager<>();
 				
 		String line;
 		String solution;
