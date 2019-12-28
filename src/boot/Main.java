@@ -9,7 +9,7 @@ public class Main {
 	static Server s;
 	
 	public static void main(String[] args) {
-		s=new MySerialServer(); 
-		s.start(Integer.parseInt(args[0]), new MyTestClientHandler());
+		s=new MySerialServer(Integer.parseInt(args[0])); 
+		s.start(new MyTestClientHandler());
 	}
 }
