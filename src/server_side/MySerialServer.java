@@ -8,6 +8,7 @@ public class MySerialServer implements Server {
 	private ServerSocket serverSocket;
     private Socket clientSocket;
     private volatile boolean stop;
+    private int port;
     
     public MySerialServer() {
     	this.serverSocket = null;
@@ -15,8 +16,12 @@ public class MySerialServer implements Server {
     	stop = false;
     }
 	
-    @Override
-    public void start(int port, ClientHandler ch) {
+    public MySerialServer(int port) {
+    	this.port = port;
+	}
+
+	@Override
+    public void start(ClientHandler ch) {
     	new Thread(()->{
 			try {
 				runServer(port, ch);

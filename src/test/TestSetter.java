@@ -1,7 +1,5 @@
 package test;
 
-// change this to match your code
-
 import server_side.*;
 
 public class TestSetter {
@@ -11,14 +9,11 @@ public class TestSetter {
 	
 	public static void runServer(int port) {
 		// put the code here that runs your server
-		// for example:
-		s=new MySerialServer(); 
-		s.start(port, new MyTestClientHandler());
+		s=new MySerialServer(port); // initialize
+		s.start(new MyTestClientHandler());
 	}
 
 	public static void stopServer() {
-		// put the code here that stops your server
-		// for example:
 		s.stop();
 	}
 	

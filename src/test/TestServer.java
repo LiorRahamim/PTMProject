@@ -22,22 +22,51 @@ public class TestServer {
 			in=new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
 			Random r=new Random() ;
-			 
-			for(int i=0;i<5;i++){
-				String problem =""+r.nextInt(Integer.MAX_VALUE);
-				System.out.println("\tsending problem... = " + problem);
-				out.println(problem);
-				out.flush();
-				System.out.println("\tproblem sent, waiting for solution...");
-				String sol=in.readLine();
-				System.out.println("\tsolution received = " + sol);
-				String realSol=new StringBuilder(problem).reverse().toString();
-				if(!realSol.equals(sol))
-					System.out.println("\twrong answer from your server (-4)");
-				
+			int[][] matrix=new int[4][4];
+			for(int i=0;i<matrix.length;i++)
+				for(int j=0;j<matrix[i].length;j++)
+					matrix[i][j]=100+r.nextInt(101);
+
+			StringBuilder sol=new StringBuilder();
+			int i=0,j=0;
+			while(i<3 || j<3){
+				if(j<3 && r.nextBoolean()){
+					sol.append(",Right");
+					j++;
+					matrix[i][j]=r.nextInt(100);
+				}else{
+					if(i<3){
+						sol.append(",Down");
+						i++;
+						matrix[i][j]=r.nextInt(100);						
+					}
+				}
+			}
+			String fsol=sol.substring(1);			 
+			System.out.println("\tsending problem...");
+			for(i=0;i<matrix.length;i++){
+				System.out.print("\t");
+				for(j=0;j<matrix[i].length-1;j++){
+					out.print(matrix[i][j]+",");
+					System.out.print(matrix[i][j]+",");
+				}
+				out.println(matrix[i][j]);
+				System.out.println(matrix[i][j]);
 			}
 			out.println("end");
+			out.println("0,0");
+			out.println("3,3");
 			out.flush();
+			System.out.println("\tend\n\t0,0\n\t3,3");
+			System.out.println("\tproblem sent, waiting for solution...");
+			String usol=in.readLine();
+			System.out.println("\tsolution received");
+			if(!usol.equals(fsol)){
+				System.out.println("\twrong answer from your server (-20)");
+			
+				System.out.println("\t\tyour solution: "+usol);
+				System.out.println("\t\texpected solution: "+fsol);
+			}
 			
 		}catch(SocketTimeoutException e){
 			System.out.println("\tYour Server takes over 3 seconds to answer (-20)");
