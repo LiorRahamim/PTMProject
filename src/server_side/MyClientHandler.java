@@ -12,10 +12,10 @@ import java.util.List;
 
 // This class is about handling the actual problem in this project - finding shortest path
 public class MyClientHandler implements ClientHandler {
-	String line;
 
-	// returns the matrix from client
+	// returns the matrix the client sends
 	private int[][] readMatrix(BufferedReader in) {
+		String line;
 		ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
 		int[][] primitiveMatrix;
 		try {
@@ -49,6 +49,26 @@ public class MyClientHandler implements ClientHandler {
 		return primitiveMatrix;
 	}
 
+	// returns the point the client sends
+	private Point readPoint(BufferedReader in) {
+		String line;
+		Point point = null;
+
+		try {
+			List<String> stringLine = new ArrayList<String>();
+			
+			line = in.readLine();
+			stringLine = Arrays.asList(line.split(","));
+			point = new Point(Integer.parseInt(stringLine.get(0)), Integer.parseInt(stringLine.get(1)));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return point;
+	}
+	
 	@Override
 	public void handleClient(InputStream inputStream, OutputStream outputStream) {
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
@@ -59,10 +79,14 @@ public class MyClientHandler implements ClientHandler {
 		String line;
 		String solution;
 		int[][] matrix;
-
+		Point start;
+		Point finish;
+		
 		try {
 			matrix = readMatrix(in);
-
+			start = readPoint(in);
+			finish = readPoint(in);
+			
 			line = "something";
 			//line = in.readLine();
 			while (!line.equals("end")) {
