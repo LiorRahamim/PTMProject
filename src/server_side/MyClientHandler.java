@@ -12,6 +12,14 @@ import java.util.List;
 
 // This class is about handling the actual problem in this project - finding shortest path
 public class MyClientHandler implements ClientHandler {
+	
+	private CacheManager<String,String> cacheManager;
+	private Solver<GraphPack,ArrayList<Direction>> solver;
+	
+	public MyClientHandler() {
+		this.cacheManager = new HashCacheManager<>();
+		this.solver = new GraphSolver(new BestFirstSearch<Vertix>());
+	}
 
 	// returns the matrix the client sends
 	private int[][] readMatrix(BufferedReader in) {
@@ -73,11 +81,11 @@ public class MyClientHandler implements ClientHandler {
 	public void handleClient(InputStream inputStream, OutputStream outputStream) {
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 		PrintWriter out = new PrintWriter(outputStream);
-		Solver<String, String> solver = new StringReverserSolver();
-		CacheManager<String, String> cacheManager = new HashCacheManager<>();
+//		Solver<String, String> solver = new StringReverserSolver();
+//		CacheManager<String, String> cacheManager = new HashCacheManager<>();
 
 		String line;
-		String solution;
+		ArrayList<Direction> solution;
 		int[][] matrix;
 		Point start;
 		Point finish;
@@ -87,23 +95,34 @@ public class MyClientHandler implements ClientHandler {
 			start = readPoint(in);
 			finish = readPoint(in);
 			
-			line = "something";
-			//line = in.readLine();
-			while (!line.equals("end")) {
+			GraphPack graphPack = new GraphPack(matrix, start, finish);
+			
+//			line = "something";
+//			line = in.readLine();
+//			while (!line.equals("end")) {
 
-				if (cacheManager.isSolved(line)) {
-					solution = cacheManager.getSolution(line);
-				} else {
-					solution = solver.solve(line);
-					cacheManager.SaveSolution(line, solution);
-				}
+//				if (cacheManager.isSolved(graphPack)) {
+//					solution = cacheManager.getSolution(graphPack);
+//				} else {
+//					cacheManager.SaveSolution(graphPack, solution);
+//				}
+			solution = solver.solve(graphPack);
 
-				out.println(solution);
-				out.flush();
-
-				line = "end";
-				// line = in.readLine();
+			ArrayList<String> solutionStrings = new ArrayList<String>();
+			
+			for (Direction d: solution) {
+				solutionStrings.add(d.toString());
 			}
+			
+//			System.out.println("\n\t**** solution ****");
+//			System.out.println('\t' + String.join(",", solutionStrings) + '\n');
+			
+			out.print(String.join(",", solutionStrings));			
+			out.flush();
+
+//				line = "end";
+//				line = in.readLine();
+//			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
